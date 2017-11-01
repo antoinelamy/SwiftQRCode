@@ -196,7 +196,7 @@ open class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         dataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
     }
     
-    open func metadataOutput(captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         
         clearDrawLayer()
         
@@ -250,20 +250,20 @@ open class QRCode: NSObject, AVCaptureMetadataOutputObjectsDelegate {
         shapeLayer.lineWidth = lineWidth
         shapeLayer.strokeColor = strokeColor.cgColor
         shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.path = createPath(codeObject.corners as NSArray).cgPath
+        shapeLayer.path = createPath(codeObject.corners).cgPath
         
         drawLayer.addSublayer(shapeLayer)
     }
     
-    func createPath(_ points: NSArray) -> UIBezierPath {
+    func createPath(_ points: [CGPoint]) -> UIBezierPath {
         let path = UIBezierPath()
 
-        var point = CGPoint(dictionaryRepresentation: points[0] as! CFDictionary)
+        var point = points.first
         path.move(to: point!)
         
         var index = 1
         while index < points.count {
-            point = CGPoint(dictionaryRepresentation: points[index] as! CFDictionary)
+            point = points[index]
             path.addLine(to: point!)
             
             index = index + 1
